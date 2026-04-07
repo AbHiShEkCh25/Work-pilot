@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-const API = "http://localhost:5000";
+const API = "https://work-pilot-backend.onrender.com";
 
 function Auth() {
   const [isLogin, setIsLogin] = useState(true);
