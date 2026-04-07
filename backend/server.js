@@ -11,7 +11,7 @@ app.use(express.json());
 
 // ================= DB =================
 mongoose
-  .connect("mongodb://mongo:27017/tasks")
+  .connect("mongodb+srv://chabhi20125_db_user:abhizing1234@cluster0.xwqhfwb.mongodb.net/tasks?retryWrites=true&w=majority")
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.log(err));
 
