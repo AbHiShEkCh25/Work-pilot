@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+const API = "https://work-pilot-backend.onrender.com";
+
 function Dashboard() {
   const token = localStorage.getItem("token");
   const email = localStorage.getItem("email");
@@ -14,7 +16,6 @@ function Dashboard() {
   const [deadline, setDeadline] = useState("");
 
   const [reportText, setReportText] = useState("");
-
   const [search, setSearch] = useState("");
 
   const [showTasks, setShowTasks] = useState(false);
@@ -27,7 +28,7 @@ function Dashboard() {
   }, []);
 
   const fetchTasks = async () => {
-    const res = await axios.get("http://localhost:5000/tasks", {
+    const res = await axios.get(`${API}/tasks`, {
       headers: { Authorization: token },
     });
     setTasks(res.data);
@@ -35,7 +36,7 @@ function Dashboard() {
 
   const fetchReports = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/reports", {
+      const res = await axios.get(`${API}/reports`, {
         headers: { Authorization: token },
       });
       setReports(res.data);
@@ -47,7 +48,7 @@ function Dashboard() {
   // ================= TASK =================
   const addTask = async () => {
     await axios.post(
-      "http://localhost:5000/tasks",
+      `${API}/tasks`,
       { title, assignedTo, deadline },
       { headers: { Authorization: token } }
     );
@@ -60,7 +61,7 @@ function Dashboard() {
 
   const completeTask = async (id) => {
     await axios.put(
-      `http://localhost:5000/complete/${id}`,
+      `${API}/complete/${id}`,
       {},
       { headers: { Authorization: token } }
     );
@@ -70,7 +71,7 @@ function Dashboard() {
   // ================= REPORT =================
   const sendReport = async () => {
     await axios.post(
-      "http://localhost:5000/report",
+      `${API}/report`,
       { text: reportText },
       { headers: { Authorization: token } }
     );
@@ -89,7 +90,7 @@ function Dashboard() {
     t.assignedTo?.toLowerCase().includes(search.toLowerCase())
   );
 
-  // ================= EMPLOYEE DASHBOARD =================
+  // ================= EMPLOYEE =================
   if (role === "employee") {
     const myTasks = tasks.filter((t) => t.assignedTo === email);
 
@@ -99,15 +100,12 @@ function Dashboard() {
 
     return (
       <div style={layout}>
-        {/* SIDEBAR */}
         <div style={sidebar}>
           <h2>🚀 WorkPilot</h2>
           <p>Dashboard</p>
         </div>
 
-        {/* MAIN */}
         <div style={main}>
-          {/* TOP BAR */}
           <div style={topbar}>
             <h2>Employee 👨‍💻</h2>
             <div>
@@ -118,14 +116,12 @@ function Dashboard() {
             </div>
           </div>
 
-          {/* STATS */}
           <div style={row}>
             <div style={card}>Total Tasks: {total}</div>
             <div style={card}>Pending: {pending}</div>
             <div style={card}>Completed: {completed}</div>
           </div>
 
-          {/* TASKS */}
           <div style={card}>
             <h3>Your Tasks</h3>
             {myTasks.length === 0 ? (
@@ -160,7 +156,6 @@ function Dashboard() {
             )}
           </div>
 
-          {/* DAILY REPORT */}
           <div style={card}>
             <h3>📄 Daily Report</h3>
             <textarea
@@ -176,10 +171,9 @@ function Dashboard() {
     );
   }
 
-  // ================= BOSS DASHBOARD =================
+  // ================= BOSS =================
   return (
     <div style={layout}>
-      {/* SIDEBAR */}
       <div style={sidebar}>
         <h2>🚀 WorkPilot</h2>
         <p>Dashboard</p>
@@ -188,11 +182,9 @@ function Dashboard() {
         </p>
       </div>
 
-      {/* MAIN */}
       <div style={main}>
         <h2>Boss Dashboard 👨‍💼</h2>
 
-        {/* ASSIGN */}
         <div style={card}>
           <h3>Assign Task</h3>
           <div style={row}>
@@ -215,7 +207,6 @@ function Dashboard() {
           </div>
         </div>
 
-        {/* PERFORMANCE */}
         <div style={card}>
           <h3>📊 Employee Performance</h3>
           <input
@@ -231,12 +222,8 @@ function Dashboard() {
           ))}
         </div>
 
-        {/* REPORTS */}
         <div style={card}>
-          <h3
-            onClick={() => setShowReports(!showReports)}
-            style={{ cursor: "pointer" }}
-          >
+          <h3 onClick={() => setShowReports(!showReports)}>
             📄 Reports {showReports ? "▲" : "▼"}
           </h3>
 
@@ -253,12 +240,8 @@ function Dashboard() {
             ))}
         </div>
 
-        {/* TASKS */}
         <div style={card}>
-          <h3
-            onClick={() => setShowTasks(!showTasks)}
-            style={{ cursor: "pointer" }}
-          >
+          <h3 onClick={() => setShowTasks(!showTasks)}>
             📋 All Tasks {showTasks ? "▲" : "▼"}
           </h3>
 
@@ -277,54 +260,13 @@ function Dashboard() {
 }
 
 // ================= STYLES =================
-const layout = {
-  display: "flex",
-  height: "100vh",
-  background: "#0f172a",
-  color: "white",
-};
-
-const sidebar = {
-  width: "220px",
-  background: "#1e293b",
-  padding: "20px",
-};
-
-const main = {
-  flex: 1,
-  padding: "20px",
-};
-
-const topbar = {
-  display: "flex",
-  justifyContent: "space-between",
-  marginBottom: "20px",
-};
-
-const row = {
-  display: "flex",
-  gap: "10px",
-  marginBottom: "10px",
-};
-
-const card = {
-  background: "#1e293b",
-  padding: "20px",
-  marginTop: "20px",
-  borderRadius: "10px",
-};
-
-const innerCard = {
-  background: "#334155",
-  padding: "10px",
-  marginTop: "10px",
-  borderRadius: "6px",
-};
-
-const logoutBtn = {
-  marginLeft: "10px",
-  background: "red",
-  color: "white",
-};
+const layout = { display: "flex", height: "100vh", background: "#0f172a", color: "white" };
+const sidebar = { width: "220px", background: "#1e293b", padding: "20px" };
+const main = { flex: 1, padding: "20px" };
+const topbar = { display: "flex", justifyContent: "space-between", marginBottom: "20px" };
+const row = { display: "flex", gap: "10px", marginBottom: "10px" };
+const card = { background: "#1e293b", padding: "20px", marginTop: "20px", borderRadius: "10px" };
+const innerCard = { background: "#334155", padding: "10px", marginTop: "10px", borderRadius: "6px" };
+const logoutBtn = { marginLeft: "10px", background: "red", color: "white" };
 
 export default Dashboard;
